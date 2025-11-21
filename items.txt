@@ -1,3 +1,4 @@
+//ItemId    //itemName              //price     //quantity
 ITM001      Black Forest Cake       45.00       100
 ITM002      Red Velvet Cake         50.00       100
 ITM003      Hotdog bun               2.50       100
