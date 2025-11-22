@@ -1,3 +1,0 @@
-//dateTime           //billId    //totalQty   //totalAmt
-2025/10/11  11:00       B001        3            48.60
-2025/09/10  12:00       B002        1             0.90

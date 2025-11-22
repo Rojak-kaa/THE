@@ -1,3 +1,0 @@
-//bill id   //dateTime           //orderId     //totalAmt
-B001        2025/10/11  11:00       ODR001        48.60
-B002        2025/09/10  12:00       ODR002         0.90
