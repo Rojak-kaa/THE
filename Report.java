@@ -1,5 +1,6 @@
 import java.util.*;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 
 public class Report
 {
@@ -56,8 +57,8 @@ public void generateDailyReport(LocalDate date) {
     for (Billing b : billings) {
         if (b.getDate().equals(date)) {
             totalBill++;
-            totalSales += b.getTotalAmt();
-            System.out.printf("%-15s %-13.2f%n", b.getBillId(), b.getTotalAmt());
+            totalSales += b.getGrandTotal();
+            System.out.printf("%-15s %-13.2f%n", b.getBillId(), b.getGrandTotal());
         }
     }
 
@@ -96,8 +97,8 @@ public void generateDailyReport(LocalDate date) {
             LocalDate d = b.getDate();
             if (d.getYear() == year && d.getMonthValue() == month) {
                 totalBill++;
-                totalSales += b.getTotalAmt();
-                System.out.printf("%-7s %-7s %-13.2f%n", b.getDate(), b.getBillId(), b.getTotalAmt());
+                totalSales += b.getGrandTotal();
+                System.out.printf("%-7s %-7s %-13.2f%n", b.getDate(), b.getBillId(), b.getGrandTotal());
             }
         }
 
@@ -124,7 +125,7 @@ public void generateDailyReport(LocalDate date) {
         double sum = 0;
         for (Order o : c.getOrderHistory())
         {
-            sum += o.getTotalAmt();
+            sum += o.getGrandTotal();
         }
         return sum;
     }
@@ -147,7 +148,7 @@ public void generateDailyReport(LocalDate date) {
             for (Order o : c.getOrderHistory())
             {
                 System.out.println("  Order ID: " + o.getOrderId() +
-                        " | Total Price: RM " + o.getTotalAmt());
+                        " | Total Price: RM " + o.getGrandTotal());
             }
 
             System.out.println("Total Orders: " + countTotalOrder(c));
