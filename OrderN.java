@@ -23,6 +23,7 @@ public class Order {
     protected  boolean found;
     protected double totalPrice;
     protected String custName;
+    protected double grandTotal;
 
 
     public static String generateOrderId() {
@@ -55,6 +56,10 @@ public class Order {
         }
     }
 
+    return orderID;
+}
+
+public String getOrderId() {
     return orderID;
 }
 
@@ -292,7 +297,21 @@ public void displayOrder() {
     return null;
 }
 
-        
+//getters
+public String getCustID() {
+    return custID;}
+
+public String getItemId() {
+    return itemID;}
+
+public int getQuantity() {
+    return itemQty;}
+
+public double getTotalPrice() {
+    return totalPrice;}
+
+public double getGrandTotal() {
+    return grandTotal;}
 
 }
 
