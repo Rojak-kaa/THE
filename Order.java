@@ -6,10 +6,15 @@ public class Order {
     private static int counter = 0;
     private static String lastDate = "";
     List<String> orderItems = new ArrayList<>();
+    List<String> custDetail = new ArrayList<>();
+    Scanner sc = new Scanner(System.in);
 
+    protected String orderType;
     protected String orderID;
     protected String itemID;
     protected String itemName;
+    protected String custPhNo;
+    protected String custID;
     protected static int itemQty;
     protected double itemPrice;
     protected int itemStock;
@@ -17,17 +22,12 @@ public class Order {
     private char  userChoice;
     protected  boolean found;
     protected double totalPrice;
-
-    protected String ForderID;
-    protected String FitemID;
-    protected String FitemName;
-    protected int FitemQty;
-
+    protected String custName;
+    protected double grandTotal;
 
 
     public static String generateOrderId() {
-    String today = java.time.LocalDate.now()
-            .format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd"));
+    String today = java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd"));
 
     int tryCounter = 1;
     boolean unique = false;
@@ -58,6 +58,7 @@ public class Order {
 
     return orderID;
 }
+
 
 public void updateInventoryStock(String targetID, int newStock) {
     List<String> updatedLines = new ArrayList<>();
@@ -95,20 +96,57 @@ public void updateInventoryStock(String targetID, int newStock) {
 
 
 
+    //check is dine-in or take away
+    public String typeOfOrder()
+    {
+        System.out.println("\nDine-in or Take away?");
+        System.out.println("1.Dine-in\n2.Take away");
+        System.out.print("Enter number: ");
+        userChoice=sc.next().charAt(0);
+        sc.nextLine();
+        switch (userChoice) {
+            case '1':
+                orderType = "Dine-in";
+                break;
+            case '2':
+                orderType = "Take away";
+                break;
+            default:
+                orderType = "Unknown";
+                System.out.println("Invalid number.");
+                break;
+        }
+
+        return orderType;
+
+    }
+
+
+//
+
     public void takeOrder() {
-    Scanner sc = new Scanner(System.in);
 
-
+    
+   custPhNo=readCustomer();
+   System.out.println("Customer ID:"+custID);
 
     // Generate order ID
     orderID = generateOrderId();
     System.out.println("Order ID: " + orderID);
 
-    userChoice = 'y';
-    // Input Item ID
+
+    System.out.println("Order type: " + orderType);
+
+    Person p =null;
+
+    found = true;
+
+
+    
 
     while(userChoice !='n' && userChoice !='N' ){
     while(true) {
+
         System.out.print("Item ID: ");
         itemID = sc.nextLine().trim();
 
@@ -138,7 +176,8 @@ public void updateInventoryStock(String targetID, int newStock) {
         }
 
         if (found) {
-            System.out.println("Item found: " + itemName  );//", Stock: " + itemStock
+            System.out.println("Item found: " + itemName  );
+            
             break;
         } else {
             System.out.println("Item ID not found. Please enter again.");
@@ -167,7 +206,7 @@ public void updateInventoryStock(String targetID, int newStock) {
 
             // store order line
             totalPrice=itemPrice*itemQty;
-            String orderLine = orderID + "," + itemID + "," + itemName + "," + itemQty+","+totalPrice;
+            String orderLine = custID + "," + orderID + "," + itemID + "," + itemName + "," + itemQty + "," + totalPrice + "," + orderType + "," + custPhNo;
             orderItems.add(orderLine);
 
             displayOrder();
@@ -194,17 +233,21 @@ public void updateInventoryStock(String targetID, int newStock) {
 
 
 public void displayOrder() {
+    
 
     System.out.println("\n===== ORDER DETAILS =====");
+
+    double grandTotal = 0;
 
     for (String line : orderItems) {
         String[] parts = line.split(",");
 
-        String orderID = parts[0];
-        String itemID = parts[1];
-        String itemName = parts[2];
-        String qty = parts[3];
-        String total = parts[4]; // <-- GET totalPrice FROM LIST
+        String custID = parts[0];
+        String orderID = parts[1];
+        String itemID = parts[2];
+        String itemName = parts[3];
+        String qty = parts[4];
+        String total = parts[5]; // <-- GET totalPrice FROM LIST
 
         System.out.println("Order ID : " + orderID);
         System.out.println("Item ID  : " + itemID);
@@ -213,24 +256,65 @@ public void displayOrder() {
         System.out.println("Total Price: RM " + total);
         System.out.println("----------------------------------");
 
-        double grandTotal = 0;
-
-        for (String lines : orderItems) {
-            String[] partss = lines.split(",");
-            grandTotal += Double.parseDouble(parts[4]);
-        }
-
-System.out.println("GRAND TOTAL: RM " + grandTotal);
+        grandTotal += Double.parseDouble(total); 
     }
+    System.out.println("GRAND TOTAL: RM " + grandTotal);
 }
 
 
-        
+ public String readCustomer() {
+    System.out.print("Enter your phone number: ");
+    String phoneNumber = sc.nextLine();
 
+    try (BufferedReader reader = new BufferedReader(new FileReader("Customer.txt"))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(",");
+
+            // File format: customerID, phoneNumber, customerName
+            if (parts.length >= 3) {
+                String storedID = parts[0].trim();
+                String storedPhone = parts[1].trim();
+                String storedName = parts[2].trim();
+
+                if (storedPhone.equalsIgnoreCase(phoneNumber)) {
+                    this.custID = storedID;      // SAVE the customer ID
+                    this.custPhNo = phoneNumber;  // SAVE the phone number
+                    this.custName = storedName;   // SAVE the name
+                    System.out.println("Welcome " + storedName + "!");
+                    return phoneNumber;  // return phone for assignment
+                }
+            }
+        }
+    } catch (IOException e) {
+        System.out.println("Error reading file.");
     }
 
-    
+    System.out.println("Phone number not found.");
+    return null;
+}
 
+//getters
+public String getCustID() {
+    return custID;}
 
+public String getItemId() {
+    return itemID;}
 
+public int getQuantity() {
+    return itemQty;}
 
+public double getTotalPrice() {
+    return totalPrice;}
+
+public double getGrandTotal() {
+    return grandTotal;}
+
+public double getPrice() {
+    return itemPrice;}
+
+public String getOrderId() {
+    return orderID;
+}
+
+}
