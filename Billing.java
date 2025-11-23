@@ -1,5 +1,4 @@
 import java.time.LocalDate;
-import java.io.*;
 import java.util.*;
 
 public class Billing
@@ -8,7 +7,7 @@ public class Billing
 
     private String billId;
     private LocalDate date;
-    private double totalPrice, totalAmt;
+    private double totalPrice, grandTotal;
 
     private Order order;
 
@@ -23,7 +22,7 @@ public class Billing
         this.billId = generateBillId();
         this.date = LocalDate.now();
         this.totalPrice = 0.00;
-        this.totalAmt = 0.00;
+        this.grandTotal = 0.00;
     }
 
     public String generateBillId()
@@ -52,45 +51,52 @@ public class Billing
         return totalPrice;
     }
 
-    public void calculateTotalAmt()
+    public void calculateGrandTotal()
     {
-        totalAmt += totalPrice;
+        grandTotal += totalPrice;
     }
 
-    public double getTotalAmt()
+    public double getGrandTotal()
     {
-        return totalAmt;
+        return grandTotal;
     }
 
     public void calculateBill()
     {
         calculateTotalPrice();
-        calculateTotalAmt();
+        calculateGrandTotal();
+
     }
 
-    public void generateReceipt() {
+    public void generateReceipt() 
+    {
         calculateBill();
 
         System.out.println("Bill Id: " + billId + "\t Date: " + date);
-        System.out.println("Order Id: " + order.getOrderId() + "\t Customer Id: " + order.getCustId());
+        System.out.println("Order Id: " + order.getOrderId() + "\t Customer Id: " + order.getCustID());
         System.out.println("==================================================================================");
         System.out.printf("%-10s %-10s %-15s %-15s%n", "Item Id", "Quantity", "Price per Unit", "Total Price");
-        System.out.println("==================================================================================");
+        System.out.println("-----------------------------------------------------------------------------------");
 
-        totalAmt = 0.00;
+        grandTotal = 0.00;
 
-        for(int i = 0; i < order.getItemId().size(); i++)
+        List<String> orderItems = order.orderItems;
+
+        for (String line : orderItems) 
         {
-            String itemId =order.getItemId().get(i);
-            int quantity = order.getQuantity().get(i);
-            double price = order.getPrice().get(i);
+            String[] parts = line.split(",");
+
+            String itemId = parts[2].trim();
+            int quantity = Integer.parseInt(parts[4].trim());
+            double totalPrice = Double.parseDouble(parts[5].trim());
+            double price = totalPrice / quantity;
 
             //System.out.printf("%-10s %-10d %-8.2f %-8.2f%n", order.getItemId(), order.getQuantity(), order.getPrice(), getTotalPrice());
-            System.out.printf("%-10s %-10d %-15.2f %-15.2f%n", itemId, quantity, price, totalPrice);
+        System.out.printf("%-10s %-10d %-15.2f %-15.2f%n", itemId, quantity, price, totalPrice);
         }
 
         System.out.println("-----------------------------------------------------------------------------------");
-        System.out.printf("Total Amount: %.2f%n", totalAmt);
+        System.out.printf("Total Amount: %.2f%n", grandTotal);
         System.out.println("==================================================================================");
     }
 }

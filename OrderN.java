@@ -59,9 +59,6 @@ public class Order {
     return orderID;
 }
 
-public String getOrderId() {
-    return orderID;
-}
 
 public void updateInventoryStock(String targetID, int newStock) {
     List<String> updatedLines = new ArrayList<>();
@@ -313,10 +310,11 @@ public double getTotalPrice() {
 public double getGrandTotal() {
     return grandTotal;}
 
+public double getPrice() {
+    return itemPrice;}
+
+public String getOrderId() {
+    return orderID;
 }
 
-    
-
-
-
-
+}
