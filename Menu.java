@@ -10,11 +10,12 @@ public class Menu
     public void displayMenu() {
         System.out.println("----- Menu -----");
 
-        for(BakeryItem item : inventory.getItems()) {
-            if(item.getQuantity() > 0) {
-                System.out.println("Item ID: " + item.getId());
+        for(Item item : inventory.getItems()) {
+            if(item.getStock() > 0) {
+                System.out.println("Item ID: " + item.getItemId());
                 System.out.println("Name: " + item.getName());
                 System.out.println("Price: " + item.getPrice());
             }
         }
+    }
 }

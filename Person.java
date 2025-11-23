@@ -1,6 +1,6 @@
 public class Person {
     
-    protected static String name;
+    protected String name;
     protected String ID;
     protected String phone;
 

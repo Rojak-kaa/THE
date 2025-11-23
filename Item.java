@@ -119,6 +119,26 @@ public class Item {
         }
     }
 
+    //Getter methods
+    public String getItemId() {
+        return iID;
+    }
+    public String getName() {
+        return name;
+    }
+    public double getPrice() {
+        return price;
+    }
+    public int getStock() {
+        return stock;
+    }
+    public void setPrice(double price) {
+        this.price = price;
+    }
+    
+    public void increaseStock(int qty) {
+        this.stock += qty;
+    }
 
 
     /*@Override

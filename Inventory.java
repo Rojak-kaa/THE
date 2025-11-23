@@ -15,7 +15,7 @@ public class Inventory {
 
     public Item findItem(String id) {
         for (Item i : items) {
-            if (i.getId().equals(id)) return i;
+            if (i.getItemId().equals(id)) return i;
         }
         return null;
     }

@@ -11,8 +11,8 @@ public class ItemFile {
     private boolean found;
     private String itemName;
     private int itemStock;
-    private double itemPrice;
-    private int userChoice;
+    //private double itemPrice;
+    //private int userChoice;
     private int newItemStock;
 
     Order order = new Order();
@@ -40,13 +40,13 @@ public class ItemFile {
                     String currentID = parts[0].trim();
                     String currentName = parts[1].trim();
                     int stock = Integer.parseInt(parts[2].trim());
-                    double price = Double.parseDouble(parts[3]);
+                    //double price = Double.parseDouble(parts[3]);
 
                     if (currentID.equalsIgnoreCase(itemID)) {
                         found = true;
                         itemStock = stock;
                         itemName = currentName;
-                        itemPrice = price;
+                        //itemPrice = price;
                         break;
                     }
                 }

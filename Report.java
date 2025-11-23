@@ -113,7 +113,7 @@ public void generateDailyReport(LocalDate date) {
         System.out.println("===== INVENTORY REPORT =====");
         for (Item i : inventory.getItems())
         {
-            System.out.println(i.getName() + " - Quantity Available: " + i.getQuantity());
+            System.out.println(i.getName() + " - Quantity Available: " + i.getStock());
         }
         System.out.println("=============================\n");
     }
