@@ -1,4 +1,4 @@
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.io.*;
 import java.util.*;
 
@@ -7,16 +7,21 @@ public class Billing
     private static int billCounter = 0;
 
     private String billId;
-    private LocalDateTime dateTime;
+    private LocalDate date;
     private double totalPrice, totalAmt;
 
-    private Order order; //a reference of order
+    private Order order;
+
+    public Order getOrder()
+    {
+        return order;
+    }//a reference of order
 
     public Billing(Order order)
     {
         this.order = order;
         this.billId = generateBillId();
-        this.dateTime = LocalDateTime.now();
+        this.date = LocalDate.now();
         this.totalPrice = 0.00;
         this.totalAmt = 0.00;
     }
@@ -32,12 +37,12 @@ public class Billing
         return billId;
     }
 
-    public LocalDateTime getDateTime()
+    public LocalDate getDate()
     {
-        return dateTime;
+        return date;
     }
 
-    public double calculatTotalPrice()
+    public void calculateTotalPrice()
     {
         totalPrice = order.getPrice() * order.getQuantity();
     }
@@ -47,7 +52,7 @@ public class Billing
         return totalPrice;
     }
 
-    public double calculateTotalAmt()
+    public void calculateTotalAmt()
     {
         totalAmt += totalPrice;
     }
@@ -57,28 +62,35 @@ public class Billing
         return totalAmt;
     }
 
+    public void calculateBill()
+    {
+        calculateTotalPrice();
+        calculateTotalAmt();
+    }
+
     public void generateReceipt() {
         calculateBill();
 
-        System.out.println("Bill Id: " + billId + "\t Date and Time: " + dateTime);
+        System.out.println("Bill Id: " + billId + "\t Date: " + date);
         System.out.println("Order Id: " + order.getOrderId() + "\t Customer Id: " + order.getCustId());
         System.out.println("==================================================================================");
         System.out.printf("%-10s %-10s %-15s %-15s%n", "Item Id", "Quantity", "Price per Unit", "Total Price");
         System.out.println("==================================================================================");
 
-        totalAmt = 0;
+        totalAmt = 0.00;
 
         for(int i = 0; i < order.getItemId().size(); i++)
         {
             String itemId =order.getItemId().get(i);
-            int order.getQuantity().get(i);
+            int quantity = order.getQuantity().get(i);
             double price = order.getPrice().get(i);
 
-            System.out.printf("%-10s %-10d %-8.2f %-8.2f%n", order.getItemId(), order.getQuantity(), order.getPrice(), getTotalPrice());
+            //System.out.printf("%-10s %-10d %-8.2f %-8.2f%n", order.getItemId(), order.getQuantity(), order.getPrice(), getTotalPrice());
+            System.out.printf("%-10s %-10d %-15.2f %-15.2f%n", itemId, quantity, price, totalPrice);
         }
 
         System.out.println("-----------------------------------------------------------------------------------");
-        System.out.printf("Total Amount: %.2f%n", getTotalAmt());
+        System.out.printf("Total Amount: %.2f%n", totalAmt);
         System.out.println("==================================================================================");
     }
 }
