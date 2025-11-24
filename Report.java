@@ -250,8 +250,8 @@ public class Report
 
         for (Customer c : customers)
         {
-            System.out.println("Customer Id: " + c.getCustID());
-            System.out.println("\nCustomer: " + c.getName());
+            System.out.println("\nCustomer Id: " + c.getCustID());
+            System.out.println("Customer: " + c.getName());
             System.out.println("Order History:");
 
             ArrayList<String> printedOrders = new ArrayList<>();
