@@ -1,9 +1,10 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class Inventory {
+    private Scanner sc = new Scanner(System.in);
     private ArrayList<Item> items = new ArrayList<Item>();
-    private String fileName = "inventory.txt";
+    private String fileName = "src/inventory.txt";
 
     public Inventory() {
         loadFromFile(); // load items from file
@@ -13,46 +14,105 @@ public class Inventory {
         return items;
     }
 
-    public Item findItem(String id) {
-        for (Item i : items) {
-            if (i.getItemId().equals(id)) return i;
+    public void showInventory() {
+        System.out.println("1. Show All Items");
+        System.out.println("2. Add Item");
+        System.out.println("3. Remove Item");
+        System.out.println("4. Restock Item");
+        System.out.println("5. Update Item Price");
+
+        int choice = sc.nextInt();
+        sc.nextLine();
+
+        switch(choice) {
+            case 1: displayItems(); break;
+            case 2: addItem(); break;
+            case 3: removeItem(); break;
+            case 4: restockItem(); break;
+            case 5: updateItemPrice(); break;
+            default: System.out.println("Invalid number!"); break;
         }
-        return null;
     }
 
-    public void addItem(Item item) {
-        items.add(item);
+    public void addItem() {
+        System.out.print("Enter ID: ");
+        String id = sc.nextLine();
+
+        System.out.print("Enter Name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter Price: ");
+        double price = sc.nextDouble();
+
+        System.out.print("Enter Quantity: ");
+        int qty = sc.nextInt();
+        sc.nextLine(); // consume enter
+
+        items.add(new Item(id, name, price, qty));
         saveToFile();
+
+        System.out.println("Item added!");
     }
 
-    public boolean removeItem(String id) {
+    public void removeItem() {
+        System.out.print("Enter ID to remove: ");
+        String id = sc.nextLine();
+
         Item item = findItem(id);
-        if(item != null) {
+
+        if (item != null) {
             items.remove(item);
             saveToFile();
-            return true;
+            System.out.println("Item removed!");
+        } else {
+            System.out.println("Item not found!");
         }
-        return false;
     }
 
-    public void restockItem(String id, int qty) {
+    public void restockItem() {
+        System.out.print("Enter ID to restock: ");
+        String id = sc.nextLine();
+
+        System.out.print("Enter quantity: ");
+        int qty = sc.nextInt();
+        sc.nextLine();
+
         Item item = findItem(id);
+
         if (item != null) {
             item.increaseStock(qty);
+            saveToFile();
             System.out.println("Item restocked!");
         } else {
             System.out.println("Item not found!");
         }
     }
 
-    public void updateItemPrice(String id, double price) {
+
+    public void updateItemPrice() {
+        System.out.print("Enter ID to update price: ");
+        String id = sc.nextLine();
+
+        System.out.print("Enter new price: ");
+        double price = sc.nextDouble();
+        sc.nextLine();
+
         Item item = findItem(id);
+
         if (item != null) {
             item.setPrice(price);
+            saveToFile();
             System.out.println("Price updated!");
         } else {
             System.out.println("Item not found!");
         }
+    }
+
+    public Item findItem(String id) {
+        for (Item i : items) {
+            if (i.getId().equals(id)) return i;
+        }
+        return null;
     }
 
     public void displayItems() {
