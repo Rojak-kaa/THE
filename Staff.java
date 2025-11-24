@@ -114,7 +114,22 @@ public class Staff extends Person {
 
 public void updateStatus()
 {
-    System.out.println("Have you")
-}
+    do{
+    System.out.println("-------Update Status--------");
+    System.out.println("pending(y/n): ");
+    choice = sc.next().charAt(0);
+    if(choice == 'y'||choice == 'Y')
+        {
+            System.out.print("In progress(y/n):");
+            choice=sc.next().charAt(0);
+            if(choice == 'y'||choice == 'Y')
+                {
+                    System.out.print("Completed(y/n): ");
+                    choice = sc.next().charAt(0);
+                    break;
+                }
+        }
+    }while(choice == 'n' || choice =='N');
 
+}
 }
