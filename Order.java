@@ -9,6 +9,8 @@ public class Order {
     List<String> orderItems = new ArrayList<>();
     List<String> custDetail = new ArrayList<>();
     Scanner sc = new Scanner(System.in);
+    Inventory ivt = new Inventory();
+    Menu m = new Menu(ivt);
 
     protected String orderType;
     protected String orderID;
@@ -25,6 +27,8 @@ public class Order {
     protected double totalPrice;
     protected String custName;
     protected double grandTotal;
+    
+    
 
 
     public static String generateOrderId() {
@@ -126,6 +130,8 @@ public void updateInventoryStock(String targetID, int newStock) {
 
     public void takeOrder() {
 
+        
+
     
    custPhNo=readCustomer();
    System.out.println("Customer ID:"+custID);
@@ -141,8 +147,7 @@ public void updateInventoryStock(String targetID, int newStock) {
 
     found = true;
 
-
-    
+    m.displayMenu();
 
     while(userChoice !='n' && userChoice !='N' ){
     while(true) {

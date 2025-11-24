@@ -26,27 +26,27 @@ public class Person {
     // MAIN REGISTER METHOD (Inheritance Version)
     // ====================================================
     public static Person register() {
-        try(Scanner sc = new Scanner(System.in)){
+        Scanner sc = new Scanner(System.in);
 
-        System.out.println("Register as:");
+       char choice;
+
+        do {
+        System .out.println("Register as:");
         System.out.println("1. Customer");
         System.out.println("2. Staff");
         System.out.print("Enter choice: ");
 
-        char choice = sc.next().charAt(0);
-        sc.nextLine();
+        choice = sc.next().charAt(0);
 
         if (choice == '1') {
             return new Customer().registerCustomer();
-        }
+        } 
         else if (choice == '2') {
             return new Staff().registerStaff();
         }
-        else {
-            System.out.println("Invalid choice! Try again.");
-            return register();
-        }
-        
-        }
-    }
+
+        System.out.println("Invalid choice! Try again.");
+    } while (choice != '1' && choice != '2');
+
+}
 }
