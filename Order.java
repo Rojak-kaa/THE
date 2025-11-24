@@ -24,6 +24,7 @@ public class Order {
     protected  boolean found;
     protected double totalPrice;
     protected String custName;
+    protected double grandTotal;
 
 
     public static String generateOrderId() {
@@ -293,7 +294,28 @@ public void displayOrder() {
     return null;
 }
 
-        
+//Getters
+public String getCustID() {
+    return custID;}
+
+public String getItemId() {
+    return itemID;}
+
+public int getQuantity() {
+    return itemQty;}
+
+public double getTotalPrice() {
+    return totalPrice;}
+
+public double getGrandTotal() {
+    return grandTotal;}
+
+public double getPrice() {
+    return itemPrice;}
+
+public String getOrderId() {
+    return orderID;
+}        
 
 }
 
