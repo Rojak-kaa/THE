@@ -16,6 +16,7 @@ public class Person {
     protected int itemQty;
     protected double totalPrice;
     protected String orderType;
+    protected char choice;
 
     Scanner sc = new Scanner(System.in);
 
