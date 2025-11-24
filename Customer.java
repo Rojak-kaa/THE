@@ -181,9 +181,15 @@ public void viewOrderHistory() {
     if (!found) {
         System.out.println("Phone number not found.");
     }
+    }
+
+    // Getters
+    public String getCustID() {
+        return customerID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
 }
-}
-//Getters
-
-
-
