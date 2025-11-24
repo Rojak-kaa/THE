@@ -25,6 +25,11 @@ public class Billing
         this.grandTotal = 0.00;
     }
 
+    public Billing()
+    {
+        grandTotal = 0.00;
+    }
+
     public String generateBillId()
     {
         billCounter++;
@@ -78,7 +83,7 @@ public class Billing
         System.out.printf("%-10s %-10s %-15s %-15s%n", "Item Id", "Quantity", "Price per Unit", "Total Price");
         System.out.println("-----------------------------------------------------------------------------------");
 
-        grandTotal = 0.00;
+        
 
         List<String> orderItems = order.orderItems;
 

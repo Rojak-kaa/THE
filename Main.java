@@ -1,122 +1,213 @@
-import java.time.LocalDate;
 import java.util.*;
 
-public class Main 
-{
+public class Main {
 
-    public static void main(String [] args)
-    {
+    public static void main(String[] args) {
+
         Scanner sc = new Scanner(System.in);
 
-        //Create inventory and load item
-        Inventory inv = new Inventory();
-        Menu m =new Menu(inv);
-        
-        Order o = new Order();
+        // System objects
+        Inventory ivt = new Inventory();
+        Menu m = new Menu(ivt);
+
+        Order order = new Order();
         Customer c = new Customer();
         Staff s = new Staff();
-        char userChoice;
-        userChoice=' ';
 
-        System.out.println("===========================");
-        System.out.println("Welcome to THE Bakery Shop!");
-        System.out.println("===========================");
-        
-        //ask user for the account
+        System.out.println("================================");
+        System.out.println("   Welcome to THE Bakery Shop   ");
+        System.out.println("================================");
+
+        // ============================
+        // LOGIN / REGISTER SECTION
+        // ============================
         int hasAccount = 0;
-        while(true){
-            System.out.println("Do you have an account?(y/n):");
-            userChoice = sc.next().charAt(0);
+        while (true) {
+            System.out.print("Do you have an account? (1. yes / 2. no): ");
+            String input = sc.nextLine();
 
-            if(userChoice == 'y' || userChoice == 'Y' || userChoice == 'n' || userChoice == 'N') {
-                break;  // <-- EXIT LOOP
-            }
+            try {
+                hasAccount = Integer.parseInt(input);
+                if (hasAccount == 1 || hasAccount == 2) break;
+            } catch (Exception e) {}
 
-            System.out.println("Invalid value. Try again.");
+            System.out.println("Invalid input. Please enter 1 or 2.");
         }
 
-        
-        if (userChoice == 'y' || userChoice == 'Y') 
-        {
-            while (true)  // loop until user gives valid input
-            {
-                System.out.println("\n Please select your user type:");
-                System.out.println("1. Customer \n2.Staff");
-                System.out.print("Enter choice: ");
+        // ============================
+        // USER TYPE SELECTION LOOP
+        // ============================
+        while (true) {
 
-                userChoice = sc.next().charAt(0);
+            int userChoice = 0;
 
-                if (userChoice == '1' || userChoice == '2') {
-                    break;  
+            // If user just registered, skip to user type selection
+            while (true) {
+                System.out.println("\nSelect user type:");
+                System.out.println("1. Customer");
+                System.out.println("2. Staff");
+                System.out.print("Enter number: ");
+
+                try {
+                    userChoice = Integer.parseInt(sc.nextLine());
+                    if (userChoice == 1 || userChoice == 2) break;
+                } catch (Exception e) {}
+
+                System.out.println("Invalid number. Please enter 1 or 2.");
+            }
+
+            // ============================
+            // CUSTOMER SECTION
+            // ============================
+            if (userChoice == 1) {
+
+                if (hasAccount == 1) {
+                    c.loginCustomer();
+                } else {
+                    // New registration
+                    Person p = Person.register();
+                    c.registerCustomer();
                 }
 
-                System.out.println("Invalid choice. Try again.");
+                boolean exitCustomerMenu = false;
+                while (!exitCustomerMenu) {
+                    System.out.println("\n------- Customer Page --------");
+                    System.out.println("1. Order Section");
+                    System.out.println("2. View Order History");
+                    System.out.println("3. Exit");
+                    System.out.print("Enter number: ");
+
+                    int cusChoice;
+                    try {
+                        cusChoice = sc.nextInt();
+                        sc.nextLine();
+                    } catch (Exception e) {
+                        sc.nextLine();
+                        System.out.println("Invalid input!");
+                        continue;
+                    }
+
+                    switch (cusChoice) {
+                        case 1:
+                            m.displayMenu();
+                            order.typeOfOrder();
+                            order.takeOrder();
+                            System.out.println("Payment successful!");
+                            Billing b = new Billing(order);
+                            b.generateReceipt();
+                            break;
+
+                        case 2:
+                            c.viewOrderHistory();
+                            break;
+
+                        case 3:
+                            System.out.println("Returning to user type selection...");
+                            exitCustomerMenu = true;
+                            break;
+
+                        default:
+                            System.out.println("Invalid number. Try again.");
+                    }
+                }
+            }
+
+            // ============================
+            // STAFF SECTION
+            // ============================
+            else if (userChoice == 2) {
+
+                if (hasAccount == 1) {
+                    s.loginStaff();
+                } else {
+                    // New registration
+                    Person p = Person.register();
+                    // Assume staff registration handled in register()
+                }
+
+                boolean exitStaffMenu = false;
+                while (!exitStaffMenu) {
+                    System.out.println("\n======= Staff Portal =======");
+                    System.out.println("1. Manage Inventory");
+                    System.out.println("2. Update Order Status");
+                    System.out.println("3. View Order History");
+                    System.out.println("4. View Report");
+                    System.out.println("5. Exit");
+                    System.out.print("Enter number: ");
+
+                    int staffChoice;
+                    try {
+                        staffChoice = sc.nextInt();
+                        sc.nextLine();
+                    } catch (Exception e) {
+                        sc.nextLine();
+                        System.out.println("Invalid number!");
+                        continue;
+                    }
+
+                    switch (staffChoice) {
+                        case 1:
+                            ivt.showInventory();
+                            break;
+                        case 2:
+                            s.updateStatus();
+                            break;
+                        case 3:
+                            s.viewAllOrders();
+                            break;
+                        case 4:
+                            runReportMenu(sc, c);
+                            break;
+                        case 5:
+                            System.out.println("Returning to user type selection...");
+                            exitStaffMenu = true;
+                            break;
+                        default:
+                            System.out.println("Invalid number!");
+                    }
+                }
             }
         }
-        else if(userChoice =='N' || userChoice =='n')
-            {
-                Person p = Person.register();
-            }
+        // sc.close();  ← optional: if you want program to run forever, no need to close here
+    }
 
+    // ============================
+    // REPORT SUB-MENU LOOP
+    // ============================
+    public static void runReportMenu(Scanner sc, Customer c) {
 
-        while( userChoice!=('1') && userChoice!=('2') )
-        {
-            System.out.println("========================================");
-            System.out.println("Please select your user type:");
-            System.out.println("1. Customer");
-            System.out.println("2. Staff");
-            System.out.print("Enter your choice: ");
-            userChoice = sc.next().charAt(0);   // update the value
-        }
+        Billing dummyBill = new Billing(new Order());
+        double totalSpent = 0;
+        Order order = new Order();
 
-        if(userChoice == 1)
-        {
-            System.out.println("Here are our items for sale:");
+        ArrayList<Customer> customers = new ArrayList<>();
+        customers.add(c);
 
-        }
+        ArrayList<Billing> bills = new ArrayList<>();
+        bills.add(dummyBill);
 
-        if(userChoice == 2)
-        {
-            System.out.println("Staff login portal:");
-            System.out.print("Enter staff id: ");
-            String staffId = sc.nextLine();
-            //System.out.println("Welcome, Staff " + staffName);
-        }
+        Report report = new Report(customers, bills, totalSpent);
 
-        // //INVENTORY PROCESS
-        // Inventory i = new Inventory();
-        // // i.loadItemsFromFile("inventory.txt");
-        // i.displayItems();
+        while (true) {
 
-        //CUSTOMER PROCESS
-        c.registerCustomer();
-        c.viewOrderHistory();
-
-        //ORDER PROCESS
-        o.typeOfOrder();
-        o.takeOrder();
-
-        //BILLING PROCESS
-        System.out.println("Generating bill automatically...\n");
-        Billing b = new Billing(o);
-        b.generateReceipt();
-
-        //REPORT PROCESS
-        Report report = new Report(o, c, b, i);
-
-        while (true) 
-        {
             System.out.println("\n===== REPORT MENU =====");
             System.out.println("1. Sales Report");
             System.out.println("2. Inventory Report");
             System.out.println("3. Customer Report");
-            System.out.println("4. Exit");
-            System.out.print("Enter your choice: ");
+            System.out.println("4. Back to Staff Menu");
+            System.out.print("Enter choice: ");
 
-            int choice = sc.nextInt();
+            int choice;
+            try {
+                choice = sc.nextInt();
+                sc.nextLine();
+            } catch (Exception e) {
+                sc.nextLine();
+                System.out.println("Invalid number!");
+                continue;
+            }
 
-            switch (choice) 
-            {
+            switch (choice) {
                 case 1:
                     report.generateSalesReport();
                     break;
@@ -127,10 +218,9 @@ public class Main
                     report.generateCustomerReport();
                     break;
                 case 4:
-                    System.out.println("Exiting report menu.");
-                    return;
+                    return;  // back to staff menu
                 default:
-                    System.out.println("Invalid choice. Please try again.");
+                    System.out.println("Invalid choice!");
             }
         }
     }

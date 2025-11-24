@@ -27,8 +27,12 @@ public class Order {
     protected double totalPrice;
     protected String custName;
     protected double grandTotal;
+    protected double total;
     
-    
+    public Order()
+    {
+        total = 0.00;
+    }
 
 
     public static String generateOrderId() {
@@ -67,7 +71,7 @@ public class Order {
 public void updateInventoryStock(String targetID, int newStock) {
     List<String> updatedLines = new ArrayList<>();
 
-    try (BufferedReader reader = new BufferedReader(new FileReader("InventoryList.txt"))) {
+    try (BufferedReader reader = new BufferedReader(new FileReader("Inventory.txt"))) {
         String line;
 
         while ((line = reader.readLine()) != null) {
@@ -88,7 +92,7 @@ public void updateInventoryStock(String targetID, int newStock) {
     }
 
     // Rewrite file with updated stock
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter("InventoryList.txt"))) {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter("Inventory.txt"))) {
         for (String updated : updatedLines) {
             writer.write(updated);
             writer.newLine();
@@ -156,7 +160,7 @@ public void updateInventoryStock(String targetID, int newStock) {
         itemID = sc.nextLine().trim();
 
         found = false;
-        try (BufferedReader reader = new BufferedReader(new FileReader("InventoryList.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("Inventory.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
@@ -268,6 +272,8 @@ public void displayOrder() {
 
 
  public String readCustomer() {
+    found = false;
+    do{    
     System.out.print("Enter your phone number: ");
     String phoneNumber = sc.nextLine();
 
@@ -289,6 +295,7 @@ public void displayOrder() {
                     System.out.println("Welcome " + storedName + "!");
                     return phoneNumber;  // return phone for assignment
                 }
+                found = true;
             }
         }
     } catch (IOException e) {
@@ -297,6 +304,7 @@ public void displayOrder() {
 
     System.out.println("Phone number not found.");
     return null;
+    }while(false);
 }
 
 //Getters

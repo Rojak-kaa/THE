@@ -14,6 +14,8 @@ public class Customer extends Person {
     int tryCounter = 1;
     boolean unique = false;
     String customerID = "";
+    String input;
+    boolean found;
 
     while(!unique){
         
@@ -101,36 +103,43 @@ public class Customer extends Person {
 
 
     public boolean loginCustomer() {
-    System.out.print("Enter phone number: ");
-    String input = sc.nextLine();
+    boolean found = false;
+    do{
+        System.out.print("Enter phone number: ");
+        String input = sc.nextLine();
 
-    try (BufferedReader reader = new BufferedReader(new FileReader("Customer.txt"))) {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            String[] p = line.split(",");
+        try (BufferedReader reader = new BufferedReader(new FileReader("Customer.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] p = line.split(",");
 
-            // safety check
-            if (p.length >= 3) {
-                String storedPhone = p[1].trim();   // phone number is column 2
-                String storedName  = p[2].trim();   // name is column 3
+                // safety check
+                if (p.length >= 3) {
+                    String storedPhone = p[1].trim();   // phone number is column 2
+                    String storedName  = p[2].trim();   // name is column 3
 
-                // check phone number match
-                if (storedPhone.equalsIgnoreCase(input)) {
-                    this.phoneNumber = storedPhone;
-                    this.name = storedName;
+                    // check phone number match
+                    if (storedPhone.equalsIgnoreCase(input)) {
+                        this.phoneNumber = storedPhone;
+                        this.name = storedName;
 
-                    System.out.println("Welcome " + this.name + "!");
-                    return true;
+                        System.out.println("Welcome " + this.name + "!");
+                        return true;
+                    }
+
+                    found = true;
                 }
             }
+        } catch (Exception e) {
+            System.out.println("Error reading file.");
         }
-    } catch (Exception e) {
-        System.out.println("Error reading file.");
-    }
 
-    System.out.println("Phone number not found.");
-    return false;
+        System.out.println("Phone number not found.");
+        return false;
+
+    }while(false);
 }
+
 
 public void viewOrderHistory() {
     System.out.println("-------- View Purchase History ------");
@@ -190,6 +199,10 @@ public void viewOrderHistory() {
 
     public String getName() {
         return name;
+    }
+
+    public String getPhoneNo() {
+    return phoneNumber;
     }
 
 }

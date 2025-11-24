@@ -4,7 +4,7 @@ import java.util.*;
 public class Inventory {
     private Scanner sc = new Scanner(System.in);
     private ArrayList<Item> items = new ArrayList<Item>();
-    private String fileName = "src/inventory.txt";
+    private String fileName = "inventory.txt";
 
     public Inventory() {
         loadFromFile(); // load items from file
@@ -123,7 +123,7 @@ public class Inventory {
     }
 
     public void saveToFile() {
-        try(FileWriter fw = new FileWriter(fileName)) {
+        try(FileWriter fw = new FileWriter(fileName,true)) {
             for(Item i : items) {
                 fw.write(i.toFileFormat() + System.lineSeparator());
             }
