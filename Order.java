@@ -4,8 +4,8 @@ import java.util.*;
 
 public class Order {
 
-    private static int counter = 0;
-    private static String lastDate = "";
+    // private static int counter = 0;
+    // private static String lastDate = "";
     List<String> orderItems = new ArrayList<>();
     List<String> custDetail = new ArrayList<>();
     Scanner sc = new Scanner(System.in);
@@ -137,7 +137,7 @@ public void updateInventoryStock(String targetID, int newStock) {
 
     System.out.println("Order type: " + orderType);
 
-    Person p =null;
+    // Person p =null;
 
     found = true;
 
@@ -242,7 +242,7 @@ public void displayOrder() {
     for (String line : orderItems) {
         String[] parts = line.split(",");
 
-        String custID = parts[0];
+        //String custID = parts[0];
         String orderID = parts[1];
         String itemID = parts[2];
         String itemName = parts[3];

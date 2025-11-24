@@ -6,10 +6,10 @@ public class Customer extends Person {
 
     public static String generateCustomerID(){
 
-    String orderID;
-    String itemID;
-    String itemName;
-    double itemPrice;
+    // String orderID;
+    // String itemID;
+    // String itemName;
+    // double itemPrice;
     
     int tryCounter = 1;
     boolean unique = false;
@@ -183,6 +183,7 @@ public void viewOrderHistory() {
     }
 }
 
+//Getters
 
-}
+
 
