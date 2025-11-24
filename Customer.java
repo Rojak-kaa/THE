@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.Scanner;
 
 public class Customer extends Person {
 
@@ -14,8 +15,8 @@ public class Customer extends Person {
     int tryCounter = 1;
     boolean unique = false;
     String customerID = "";
-    String input;
-    boolean found;
+    //String input;
+    //boolean found;
 
     while(!unique){
         
@@ -47,60 +48,48 @@ public class Customer extends Person {
 
     public Customer registerCustomer() {
 
-        customerID=generateCustomerID();
-        System.out.println("Customer ID: "+customerID);
+    customerID = generateCustomerID();
+    System.out.println("Customer ID: " + customerID);
 
-        System.out.print("Enter your name: ");
-        this.name = sc.nextLine();
+    System.out.print("Enter your name: ");
+    this.name = sc.nextLine();
 
-        
+    while (true) {
+        System.out.print("Enter your phone number: ");
+        this.phoneNumber = sc.nextLine();
 
-        while (true) {
-    System.out.print("Enter your phone number: ");
-    this.phoneNumber = sc.nextLine();
+        boolean found = false;
 
-    boolean found = false;
-
-    try (BufferedReader reader = new BufferedReader(new FileReader("Customer.txt"))) {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            String[] parts = line.split(",");
-
-            // Ensure phone number is in column 2
-            if (parts.length >= 2) {
-                String existingPhone = parts[1].trim();
-
-                if (existingPhone.equalsIgnoreCase(phoneNumber)) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("Customer.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 2 && parts[1].trim().equalsIgnoreCase(phoneNumber)) {
                     found = true;
                     break;
                 }
             }
+        } catch (IOException e) {
+            // File missing is fine
         }
-    } catch (IOException e) {
-        System.out.println("Error reading customer file.");
+
+        if (found) {
+            System.out.println("This phone number is already registered. Try another.");
+        } else {
+            break;
+        }
     }
 
-    if (found) {
-        System.out.println("This phone number is already registered. Try another.");
-    } else {
-        break;  // phone number is unique → exit loop
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter("Customer.txt", true))) {
+        writer.write(customerID + "," + phoneNumber + "," + name);
+        writer.newLine();
+        System.out.println("Customer registered successfully!");
+    } catch (Exception e) {
+        System.out.println("Error writing customer file.");
     }
+
+    return this;
 }
-
-
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("Customer.txt", true))) {
-            writer.write(customerID+","+phoneNumber + "," + name);
-            writer.newLine();
-            System.out.println("Customer registered successfully!");
-        } catch (Exception e) {
-            System.out.println("Error writing customer file.");
-        }
-
-        return this;
-        
-    }
-
 
     public boolean loginCustomer() {
     boolean found = false;

@@ -8,7 +8,7 @@ public class Main {
 
         // System objects
         Inventory ivt = new Inventory();
-        Menu m = new Menu(ivt);
+        Menu m = new Menu();
 
         Order order = new Order();
         Customer c = new Customer();
@@ -65,8 +65,9 @@ public class Main {
                     c.loginCustomer();
                 } else {
                     // New registration
-                    Person p = Person.register();
-                    c.registerCustomer();
+                    Person p = Person.register(sc);
+                    //c.registerCustomer(sc);
+                    
                 }
 
                 boolean exitCustomerMenu = false;
@@ -89,7 +90,7 @@ public class Main {
 
                     switch (cusChoice) {
                         case 1:
-                            m.displayMenu();
+                            m.showMenu();
                             order.typeOfOrder();
                             order.takeOrder();
                             System.out.println("Payment successful!");
@@ -121,7 +122,7 @@ public class Main {
                     s.loginStaff();
                 } else {
                     // New registration
-                    Person p = Person.register();
+                    Person p = Person.register(sc);
                     // Assume staff registration handled in register()
                 }
 
@@ -168,7 +169,7 @@ public class Main {
                 }
             }
         }
-        // sc.close();  ← optional: if you want program to run forever, no need to close here
+        
     }
 
     // ============================

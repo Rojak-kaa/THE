@@ -25,7 +25,7 @@ public class Inventory {
         sc.nextLine();
 
         switch(choice) {
-            case 1: displayItems(); break;
+            case 1: displayItems();break;
             case 2: addItem(); break;
             case 3: removeItem(); break;
             case 4: restockItem(); break;
@@ -55,19 +55,30 @@ public class Inventory {
     }
 
     public void removeItem() {
-        System.out.print("Enter ID to remove: ");
-        String id = sc.nextLine();
+    System.out.print("Enter ID to remove: ");
+    String id = sc.nextLine();
 
-        Item item = findItem(id);
+    Item item = findItem(id);
 
-        if (item != null) {
-            items.remove(item);
-            saveToFile();
-            System.out.println("Item removed!");
-        } else {
-            System.out.println("Item not found!");
+    if (item != null) {
+        // remove from the list
+        items.remove(item);
+
+        // rewrite the file WITHOUT the removed item
+        try (FileWriter fw = new FileWriter("inventory.txt")) { 
+            for (Item i : items) {
+                fw.write(i.toFileFormat() + System.lineSeparator());
+            }
+            System.out.println("Item removed successfully!");
+        } catch (IOException e) {
+            System.out.println("Error updating file: " + e.getMessage());
         }
+
+    } else {
+        System.out.println("Item not found!");
     }
+}
+
 
     public void restockItem() {
         System.out.print("Enter ID to restock: ");
@@ -89,24 +100,38 @@ public class Inventory {
     }
 
 
-    public void updateItemPrice() {
-        System.out.print("Enter ID to update price: ");
-        String id = sc.nextLine();
+   public void updateItemPrice() {
+    System.out.print("Enter ID to update price: ");
+    String id = sc.nextLine();
 
+    Item item = findItem(id);
+
+    if (item != null) {
         System.out.print("Enter new price: ");
-        double price = sc.nextDouble();
-        sc.nextLine();
-
-        Item item = findItem(id);
-
-        if (item != null) {
-            item.setPrice(price);
-            saveToFile();
-            System.out.println("Price updated!");
-        } else {
-            System.out.println("Item not found!");
+        double price;
+        try {
+            price = Double.parseDouble(sc.nextLine());
+        } catch (Exception e) {
+            System.out.println("Invalid price input!");
+            return;
         }
+
+        item.setPrice(price);
+
+        // rewrite the file with all items (updated)
+        try (FileWriter fw = new FileWriter("inventory.txt")) { // overwrite mode
+            for (Item i : items) {
+                fw.write(i.toFileFormat() + System.lineSeparator());
+            }
+            System.out.println("Price updated successfully!");
+        } catch (IOException e) {
+            System.out.println("Error updating file: " + e.getMessage());
+        }
+
+    } else {
+        System.out.println("Item not found!");
     }
+}
 
     public Item findItem(String id) {
         for (Item i : items) {
@@ -115,10 +140,29 @@ public class Inventory {
         return null;
     }
 
+
     public void displayItems() {
-        System.out.println("--- Inventory ---");
-        for (Item i : items) {
-            System.out.println(i);
+         System.out.println("----------- Inventory -----------");
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("inventory.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Assuming each line is formatted like: itemID,itemName,itemPrice,quantity
+                String[] parts = line.split(",");
+                if (parts.length >= 4) {
+                    String itemID = parts[0];
+                    String itemName = parts[1];
+                    String itemPrice = parts[2];
+                    String quantity = parts[3];
+
+                    System.out.printf("%-5s | %-20s | RM %6.2f%n", itemID, itemName, Double.parseDouble(itemPrice));
+
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Inventory file not found!");
+        } catch (IOException e) {
+            System.out.println("Error reading inventory file.");
         }
     }
 

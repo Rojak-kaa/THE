@@ -1,21 +1,32 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 public class Menu
 {
-    private Inventory inventory; //connect to Inventory
+    public void showMenu() {
+        System.out.println("----- Menu  -----");
 
-    public Menu(Inventory inv) {
-        this.inventory = inv;
-    }
+        try (BufferedReader reader = new BufferedReader(new FileReader("inventory.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Assuming each line is formatted like: itemID,itemName,itemPrice,quantity
+                String[] parts = line.split(",");
+                if (parts.length >= 4) {
+                    String itemID = parts[0];
+                    String itemName = parts[1];
+                    String itemPrice = parts[2];
+                    String quantity = parts[3];
 
-    //Display Menu (Available Items)
-    public void displayMenu() {
-        System.out.println("----- Menu -----");
+                    System.out.printf("%-5s | %-20s | RM %6.2f%n", itemID, itemName, Double.parseDouble(itemPrice));
 
-        for(Item item : inventory.getItems()) {
-            if(item.getQuantity() > 0) {
-                System.out.println("Item ID: " + item.getId());
-                System.out.println("Name: " + item.getName());
-                System.out.println("Price: " + item.getPrice());
+                }
             }
+        } catch (FileNotFoundException e) {
+            System.out.println("Inventory file not found!");
+        } catch (IOException e) {
+            System.out.println("Error reading inventory file.");
         }
     }
 }

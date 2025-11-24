@@ -10,7 +10,7 @@ public class Order {
     List<String> custDetail = new ArrayList<>();
     Scanner sc = new Scanner(System.in);
     Inventory ivt = new Inventory();
-    Menu m = new Menu(ivt);
+    Menu m = new Menu();
 
     protected String orderType;
     protected String orderID;
@@ -151,7 +151,7 @@ public void updateInventoryStock(String targetID, int newStock) {
 
     found = true;
 
-    m.displayMenu();
+    m.showMenu();
 
     while(userChoice !='n' && userChoice !='N' ){
     while(true) {
