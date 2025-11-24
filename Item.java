@@ -48,5 +48,6 @@ public class Item {
         String[] parts = line.split(",", 4);
         return new Item(parts[0], parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]));
     }
+
 }
 

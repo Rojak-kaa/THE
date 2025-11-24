@@ -11,8 +11,8 @@ public class Menu
         System.out.println("----- Menu -----");
 
         for(Item item : inventory.getItems()) {
-            if(item.getStock() > 0) {
-                System.out.println("Item ID: " + item.getItemId());
+            if(item.getQuantity() > 0) {
+                System.out.println("Item ID: " + item.getId());
                 System.out.println("Name: " + item.getName());
                 System.out.println("Price: " + item.getPrice());
             }

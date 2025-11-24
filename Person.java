@@ -25,7 +25,7 @@ public class Person {
     // MAIN REGISTER METHOD (Inheritance Version)
     // ====================================================
     public static Person register() {
-        Scanner sc = new Scanner(System.in);
+        try(Scanner sc = new Scanner(System.in)){
 
         System.out.println("Register as:");
         System.out.println("1. Customer");
@@ -44,6 +44,8 @@ public class Person {
         else {
             System.out.println("Invalid choice! Try again.");
             return register();
+        }
+        
         }
     }
 }
