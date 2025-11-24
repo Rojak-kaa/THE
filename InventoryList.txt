@@ -1,0 +1,10 @@
+ITM001, Black Forest Cake,168,35.0
+ITM002, Red Velvet Cake,70,40.0
+ITM003, Hotdog bun,63,2.0
+ITM004, Croissant,65,5.0
+ITM005, Baguette,100,2.20
+ITM006, Kaya bun,88,1.80
+ITM007, Pineapple tart,100,0.90
+ITM008, Chocolate muffin,88,1.2
+ITM009, Blueberry scone,90,1.5
+ITM010, Cinnamon roll,100,1.10
