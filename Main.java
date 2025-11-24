@@ -44,10 +44,10 @@ public class Main
         // // i.loadItemsFromFile("inventory.txt");
         // i.displayItems();
 
-        // //CUSTOMER PROCESS
-        // Customer c = new Customer();
-        // c.registerCustomer();
-        // c.displayCustomerInfo();
+        //CUSTOMER PROCESS
+        Customer c = new Customer();
+        c.registerCustomer();
+        c.displayCustomerInfo();
 
         //ORDER PROCESS
         Order o = new Order();

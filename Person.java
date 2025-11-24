@@ -1,16 +1,49 @@
+import java.util.*;
+
 public class Person {
-    
+
+
     protected String name;
-    protected String ID;
-    protected String phone;
+    protected String phoneNumber;   // only used by customer
+    protected String customerID;
+    protected String staffID;       // only used by staff
 
-    public Person(String name, String ID, String phone) {
-        this.name = name;
-        this.ID = ID;
-        this.phone = phone;
-    }
+
+    protected String orderID;
+    protected String itemID;
+    protected String itemName;
+    protected double itemPrice;
+    protected int itemQty;
+    protected double totalPrice;
+    protected String orderType;
+
+    Scanner sc = new Scanner(System.in);
 
     
 
+    // ====================================================
+    // MAIN REGISTER METHOD (Inheritance Version)
+    // ====================================================
+    public static Person register() {
+        Scanner sc = new Scanner(System.in);
 
+        System.out.println("Register as:");
+        System.out.println("1. Customer");
+        System.out.println("2. Staff");
+        System.out.print("Enter choice: ");
+
+        char choice = sc.next().charAt(0);
+        sc.nextLine();
+
+        if (choice == '1') {
+            return new Customer().registerCustomer();
+        }
+        else if (choice == '2') {
+            return new Staff().registerStaff();
+        }
+        else {
+            System.out.println("Invalid choice! Try again.");
+            return register();
+        }
+    }
 }
