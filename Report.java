@@ -1,10 +1,11 @@
 import java.util.*;
+import java.io.*;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
+//import java.time.format.DateTimeFormatter;
 
 public class Report
 {
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    //private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     //private String reportType;
     private LocalDate date;
@@ -14,17 +15,26 @@ public class Report
         return date;
     }
 
-    private ArrayList<Order> orders;
+    ////private ArrayList<Order> orders;
     private ArrayList<Customer> customers;
     private ArrayList<Billing> billings;
-    private Inventory inventory;
+    //private Inventory inventory;
+    private double totalSpent;
 
-    public Report(ArrayList<Order> orders, ArrayList<Customer> customers, ArrayList<Billing> billings, Inventory inventory)
+    // public Report(ArrayList<Order> orders, ArrayList<Customer> customers, ArrayList<Billing> billings, Inventory inventory, double totalSpent)
+    // {
+    //     this.orders = orders;
+    //     this.customers = customers;
+    //     this.billings = billings;
+    //     this.inventory = inventory;
+    //     this.totalSpent = 0.00;
+    // }
+
+    public Report(ArrayList<Customer> customers, ArrayList<Billing> billings, double totalSpent)
     {
-        this.orders = orders;
         this.customers = customers;
         this.billings = billings;
-        this.inventory = inventory;
+        this.totalSpent = 0.00;
     }
 
     //Sales Report
@@ -47,7 +57,6 @@ public class Report
                     LocalDate day = LocalDate.parse(dateInput);
                     generateDailyReport(day);
                     break;
-                    break;
                 case 2:
                     System.out.print("Enter Year: ");
                     int year = sc.nextInt();
@@ -57,12 +66,13 @@ public class Report
                     break;
                 case 3:
                     System.out.println("Exiting report menu.");
-                    return;
+                    break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
         }
-
+        sc.close();
     }
+    
 
     //DAILY SALES REPORT
 
@@ -158,10 +168,23 @@ public class Report
     public void generateInventoryReport()
     {
         System.out.println("===== INVENTORY REPORT =====");
-        for (Item i : inventory.getItems())
-        {
-            System.out.println(i.getName() + " - Quantity Available: " + i.getStock());
+        try (BufferedReader reader = new BufferedReader(new FileReader("InventoryList.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 4) {
+                    String itemID = parts[0].trim();
+                    String itemName = parts[1].trim();
+                    int quantity = Integer.parseInt(parts[2].trim());
+                    double price = Double.parseDouble(parts[3].trim());
+                    
+                    System.out.println(itemName + " (ID: " + itemID + ") - Quantity Available: " + quantity + " | Price: RM " + price);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading inventory file.");
         }
+        
         System.out.println("=============================\n");
     }
 
@@ -169,17 +192,56 @@ public class Report
 
     public double calculateTotalSpent(Customer c)
     {
-        double sum = 0;
-        for (Order o : c.getOrderHistory())
-        {
-            sum += o.getGrandTotal();
+        try (BufferedReader reader = new BufferedReader(new FileReader("Order.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 8) {
+                    String custID = parts[0].trim();
+                    
+                    if (custID.equals(c.getCustID())) {
+                        double price = Double.parseDouble(parts[5].trim());
+                        totalSpent += price;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading order file.");
         }
-        return sum;
+        return totalSpent;
     }
 
     public int countTotalOrder(Customer c)
     {
-        return c.getOrderHistory().size();
+        int count = 0;
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader("Order.txt"))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(",");
+            if (parts.length >= 8) {
+                String custID = parts[0].trim();
+                String orderID = parts[1].trim();
+                
+                if (custID.equals(c.getCustID())) {
+                    boolean alreadyExists = false;
+                    for (int i = 0; i < count; i++) {
+                        if (parts[1].trim().equals(orderID)) {
+                            alreadyExists = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!alreadyExists) {
+                        count++;
+                    }
+                }
+            }
+        }
+    } catch (IOException e) {
+        System.out.println("Error reading order file.");
+    }
+        return count;
     }
 
     public void generateCustomerReport()
@@ -188,19 +250,50 @@ public class Report
 
         for (Customer c : customers)
         {
-            System.out.println("Customer Id: " + c.getCustId());
+            System.out.println("Customer Id: " + c.getCustID());
             System.out.println("\nCustomer: " + c.getName());
             System.out.println("Order History:");
 
-            for (Order o : c.getOrderHistory())
-            {
-                System.out.println("  Order ID: " + o.getOrderId() +
-                        " | Total Price: RM " + o.getGrandTotal());
+            ArrayList<String> printedOrders = new ArrayList<>();
+
+            // for (Order o : c.getOrderHistory())
+            // {
+            //     System.out.println("  Order ID: " + o.getOrderId() +
+            //             " | Total Price: RM " + o.getGrandTotal());
+            // }
+
+            // System.out.println("Total Orders: " + countTotalOrder(c));
+            // System.out.println("Total Amount Spent: RM " + calculateTotalSpent(c));
+
+            try (BufferedReader reader = new BufferedReader(new FileReader("Order.txt"))) {
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    String[] parts = line.split(",");
+                    if (parts.length >= 8) {
+                        String custID = parts[0].trim();
+                        String orderID = parts[1].trim();
+                        double price = Double.parseDouble(parts[5].trim());
+                        
+                        boolean alreadyPrinted = false;
+                        for (String printed : printedOrders){
+                            if (printed.equals(orderID)){
+                                alreadyPrinted = true;
+                                break;
+                            }
+                        }
+                        if (custID.equals(c.getCustID()) && !alreadyPrinted) {
+                            System.out.println("  Order ID: " + orderID + " | Total Price: RM " + price);
+                            printedOrders.add(orderID);
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("Error reading order file.");
             }
 
             System.out.println("Total Orders: " + countTotalOrder(c));
             System.out.println("Total Amount Spent: RM " + calculateTotalSpent(c));
-
         }
 
         System.out.println("========================================\n");

@@ -16,7 +16,6 @@ public class Person {
     protected int itemQty;
     protected double totalPrice;
     protected String orderType;
-    protected char choice ;
 
     Scanner sc = new Scanner(System.in);
 
@@ -26,27 +25,27 @@ public class Person {
     // MAIN REGISTER METHOD (Inheritance Version)
     // ====================================================
     public static Person register() {
-        Scanner sc = new Scanner(System.in);
+        try(Scanner sc = new Scanner(System.in)){
 
-       char choice;
-
-        do {
-        System .out.println("Register as:");
+        System.out.println("Register as:");
         System.out.println("1. Customer");
         System.out.println("2. Staff");
         System.out.print("Enter choice: ");
 
-        choice = sc.next().charAt(0);
+        char choice = sc.next().charAt(0);
+        sc.nextLine();
 
         if (choice == '1') {
             return new Customer().registerCustomer();
-        } 
+        }
         else if (choice == '2') {
             return new Staff().registerStaff();
         }
-
-        System.out.println("Invalid choice! Try again.");
-    } while (choice != '1' && choice != '2');
-
-}
+        else {
+            System.out.println("Invalid choice! Try again.");
+            return register();
+        }
+        
+        }
+    }
 }
